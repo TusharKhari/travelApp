@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:travel_app/pages/welcome_page.dart';
+import 'package:travel_app/pages/navPages/welcome_page.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
