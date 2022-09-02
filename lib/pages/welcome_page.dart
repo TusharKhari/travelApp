@@ -20,6 +20,8 @@ class _WelcomePageState extends State<WelcomePage> {
   List text = [
     'Trips',
   ];
+
+  
   @override
   Widget build(BuildContext context) {
     return Scaffold(
