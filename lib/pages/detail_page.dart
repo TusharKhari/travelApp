@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+import 'package:travel_app/cubit/app_cubit_states.dart';
+import 'package:travel_app/cubit/app_cubits.dart';
 import 'package:travel_app/misc/colors.dart';
 import 'package:travel_app/widgets/app_large_text.dart';
 import 'package:travel_app/widgets/app_text.dart';
@@ -24,7 +27,9 @@ class _DetailPageState extends State<DetailPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SizedBox(
+        body: BlocBuilder<AppCubits, CubitStates>(builder: (context, state) {
+      DetailsState detail = state as DetailsState;
+      return SizedBox(
         width: double.maxFinite,
         height: double.maxFinite,
         child: Stack(children: [
@@ -34,9 +39,10 @@ class _DetailPageState extends State<DetailPage> {
             child: Container(
               width: double.maxFinite,
               height: 350,
-              decoration: const BoxDecoration(
+              decoration: BoxDecoration(
                 image: DecorationImage(
-                    image: AssetImage('assets/images/mountain.jpeg'),
+                    image: NetworkImage(
+                        'http://mark.bslmeiyu.com/uploads/${detail.place.img}'),
                     fit: BoxFit.cover),
               ),
             ),
@@ -49,9 +55,11 @@ class _DetailPageState extends State<DetailPage> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 IconButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    BlocProvider.of<AppCubits>(context).goHome();
+                  },
                   icon: const Icon(
-                    Icons.menu,
+                    Icons.arrow_back_ios,
                     color: Colors.white,
                   ),
                 ),
@@ -89,9 +97,14 @@ class _DetailPageState extends State<DetailPage> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       // crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        AppLargeText(text: 'Yosemite'),
                         AppLargeText(
-                          text: "\$ 250",
+                          text: detail.place.name,
+                          size: 22,
+                          // 'Yosemite',
+                        ),
+                        AppLargeText(
+                          text: "\$ ${detail.place.price}",
+                          // "\$ 250",
                           color: AppColors.mainColor,
                         ),
                       ],
@@ -105,8 +118,8 @@ class _DetailPageState extends State<DetailPage> {
                           color: AppColors.mainColor,
                         ),
                         AppText(
-                          text: "  USA, California",
-                          color: AppColors.mainColor,
+                          text: "  ${detail.place.location}",
+                          color: AppColors.textColor1,
                         ),
                       ],
                     ),
@@ -120,7 +133,7 @@ class _DetailPageState extends State<DetailPage> {
                             // unratedColor: Colors.white,
                             itemSize: 20,
                             itemCount: 5,
-                            initialRating: 0,
+                            initialRating: detail.place.stars.toDouble(),
                             itemBuilder: (context, index) {
                               return const Icon(
                                 Icons.star,
@@ -132,7 +145,10 @@ class _DetailPageState extends State<DetailPage> {
                                 updateRating(value);
                               });
                             }),
-                        AppText(text: _rating.toString()),
+                        AppText(
+                          text: detail.place.stars.toDouble().toString(),
+                          color: AppColors.mainTextColor,
+                        ),
                       ],
                     ),
                     const SizedBox(height: 30),
@@ -186,9 +202,9 @@ class _DetailPageState extends State<DetailPage> {
                     ),
                     const SizedBox(height: 5),
                     AppText(
-                      text:
-                          "Yosemite National Park is located in central Sierra Nevada in the US state of California. It is located near the wild protected areas.",
-                    ),
+                        text:
+                            //  "Yosemite National Park is located in central Sierra Nevada in the US state of California. It is located near the wild protected areas.",
+                            detail.place.description),
                     Expanded(child: Container()),
                     Row(
                       children: [
@@ -238,7 +254,7 @@ class _DetailPageState extends State<DetailPage> {
             ),
           )
         ]),
-      ),
-    );
+      );
+    }));
   }
 }
