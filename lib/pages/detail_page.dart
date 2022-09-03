@@ -12,7 +12,14 @@ class DetailPage extends StatefulWidget {
 }
 
 class _DetailPageState extends State<DetailPage> {
-  int selectedIndex = -1;
+  int _selectedIndex = -1;
+  double _rating = 0.0;
+
+  void updateRating(double newRating) {
+    setState(() {
+      _rating = newRating;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -108,19 +115,24 @@ class _DetailPageState extends State<DetailPage> {
                     Row(
                       children: [
                         RatingBar.builder(
+                            allowHalfRating: true,
                             direction: Axis.horizontal,
                             // unratedColor: Colors.white,
                             itemSize: 20,
                             itemCount: 5,
-                            initialRating: 4,
+                            initialRating: 0,
                             itemBuilder: (context, index) {
                               return const Icon(
                                 Icons.star,
                                 color: Colors.amber,
                               );
                             },
-                            onRatingUpdate: (value) {}),
-                        AppText(text: "(4.0)"),
+                            onRatingUpdate: (value) {
+                              setState(() {
+                                updateRating(value);
+                              });
+                            }),
+                        AppText(text: _rating.toString()),
                       ],
                     ),
                     const SizedBox(height: 30),
@@ -139,7 +151,7 @@ class _DetailPageState extends State<DetailPage> {
                           itemBuilder: (_, index) {
                             void changeSelection() {
                               setState(() {
-                                selectedIndex = index;
+                                _selectedIndex = index;
                               });
                             }
 
@@ -150,8 +162,7 @@ class _DetailPageState extends State<DetailPage> {
                                 height: 50,
                                 width: 50,
                                 decoration: BoxDecoration(
-                                    color: selectedIndex == index
-                                      
+                                    color: _selectedIndex == index
                                         ? Colors.black
                                         : Colors.grey[200],
                                     //AppColors.textColor2,
@@ -160,7 +171,7 @@ class _DetailPageState extends State<DetailPage> {
                                     child: AppLargeText(
                                   text: (index + 1).toString(),
                                   size: 22,
-                                  color: selectedIndex == index
+                                  color: _selectedIndex == index
                                       ? Colors.white
                                       : Colors.black,
                                 )),

@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:travel_app/cubit/app_cubit_logics.dart';
+import 'package:travel_app/cubit/app_cubits.dart';
 import 'package:travel_app/pages/detail_page.dart';
 import 'package:travel_app/pages/navPages/main_page.dart';
 import 'package:travel_app/pages/welcome_page.dart';
@@ -18,9 +21,11 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(home: DetailPage(),
-
-        //  WelcomePage(),
-        );
+    return MaterialApp(
+      home: BlocProvider<AppCubits>(
+        create: (context) => AppCubits(),
+        child: AppCubitLogics(),
+        ),
+    );
   }
 }
